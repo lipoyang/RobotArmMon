@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,8 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends Activity implements WiFiComm.WiFiCommListener{
 
@@ -32,6 +35,16 @@ public class MainActivity extends Activity implements WiFiComm.WiFiCommListener{
 
     // WiFi Communication
     private WiFiComm mWiFiComm;
+
+    // 接続確認コマンド送信用タイマ
+    private Timer timerCommandA = null;
+
+    // UI操作用ハンドラ
+    final Handler handler = new Handler();
+
+    // データ
+    int[] adval = new int[4];
+    int[] servo = new int[4];
 
     /************************************************************
      * ライフサイクルイベント
@@ -65,7 +78,7 @@ public class MainActivity extends Activity implements WiFiComm.WiFiCommListener{
         textServos[1] = (TextView)findViewById(R.id.textServo2);
         textServos[2] = (TextView)findViewById(R.id.textServo3);
         textServos[3] = (TextView)findViewById(R.id.textServo4);
-        
+
         // load remote address
         SharedPreferences pref = getSharedPreferences("RemoteAddress", MODE_PRIVATE);
         String remoteAddr = pref.getString("RemoteAddress", "192.168.4.1");
@@ -98,6 +111,22 @@ public class MainActivity extends Activity implements WiFiComm.WiFiCommListener{
             textStatus.setText("未接続");
             textStatus.setTextColor(Color.parseColor("#808080"));
         }
+
+        // 接続確認コマンドの送信開始
+        timerCommandA = new Timer();
+        timerCommandA.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if(mWiFiComm.isConnected()){
+                    timerCommandA.cancel();
+                    timerCommandA = null;
+                }else{
+                    String command = "#A$";
+                    byte [] bCommand=command.getBytes();
+                    mWiFiComm.send(bCommand);
+                }
+            }
+        }, 0, 1000);
     }
 
     // 画面消去時
@@ -106,7 +135,13 @@ public class MainActivity extends Activity implements WiFiComm.WiFiCommListener{
     {
         if(DEBUGGING) Log.e(TAG, "- ON PAUSE -");
 
-        // stop WiFi
+        // 接続確認コマンドの送信停止
+        if(timerCommandA != null){
+            timerCommandA.cancel();
+            timerCommandA = null;
+        }
+
+        // WiFi通信の停止
         mWiFiComm.stop();
         mWiFiComm.clearListener();
 
@@ -121,7 +156,7 @@ public class MainActivity extends Activity implements WiFiComm.WiFiCommListener{
     }
 
     /************************************************************
-     * UDP通信処理
+     * WiFi通信関連の処理
      ************************************************************/
 
     // WiFiのIPアドレスの取得
@@ -169,7 +204,40 @@ public class MainActivity extends Activity implements WiFiComm.WiFiCommListener{
         textStatus.setTextColor(Color.parseColor("#808080"));
     }
     @Override
-    public void onReceive(byte[] value) {
-        // mResultText.setText(new String(value));
+    public void onReceive(byte[] data) {
+        // 先頭文字チェック
+        if(data[0] != (byte)'#')
+        {
+            return;
+        }
+        // コマンド別処理
+        switch (data[1])
+        {
+            // A/D値・サーボ指令値コマンド
+            case (byte)'D':
+                if (data[14] == (byte)'$')
+                {
+                    for(int i = 0; i < 4; i++)
+                    {
+                        adval[i] = ((int)data[2 + 2 * i] << 8)  | (int)data[3 + 2 * i];
+                        servo[i] = (int)data[10 + i];
+                        textCtrls[i].setText(String.format("%d", adval[i]));
+                        textServos[i].setText(String.format("%d", servo[i]));
+                    }
+                }
+                break;
+            // 生存確認コマンド
+            case (byte)'A':
+                if(data[2] == (byte)'$')
+                {
+                    /*** onConnect()で処理するのでここでの処理は不要 ***/
+                    //textStatus.setText("接続済");
+                    //textStatus.setTextColor(Color.parseColor("#32CD32"));
+                }
+                break;
+            // 不明なコマンド
+            default:
+                break;
+        }
     }
 }
