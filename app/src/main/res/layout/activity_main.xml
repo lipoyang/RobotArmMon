@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="10sp"
+    android:paddingLeft="10sp"
+    android:paddingRight="10sp"
+    android:paddingTop="10sp"
+    tools:context="net.lipoyang.robotarmmon.MainActivity">
+
+    <TextView
+        android:textSize="22sp"
+        android:textColor="#4169E1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ローカルアドレス" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10sp"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/textLocalAddr1"
+            android:textSize="22sp"
+            android:textColor="#1E90FF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="192.168.0.1" />
+        <TextView
+            android:id="@+id/textLocalAddr2"
+            android:textSize="22sp"
+            android:textColor="#1E90FF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="192.168.0.1" />
+
+    </LinearLayout>
+
+    <TextView
+        android:textSize="22sp"
+        android:textColor="#4169E1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="リモートアドレス" />
+
+    <EditText
+        android:id="@+id/editRemoteAddr"
+        android:textSize="22sp"
+        android:textColor="#1E90FF"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="192.168.0.1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5sp"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/buttonUpdate"
+            android:textSize="20sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="更新" />
+        <TextView
+            android:id="@+id/textStatus"
+            android:textSize="22sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:textColor="#808080"
+            android:text="未接続" />
+
+    </LinearLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="5sp">
+            <TextView
+                android:textSize="22sp"
+                android:textColor="#4169E1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="コントローラA/D値 1" />
+            <TextView
+                android:id="@+id/textCtrl1"
+                android:textSize="22sp"
+                android:textColor="#DC143C"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="0" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="5sp">
+            <TextView
+                android:textSize="22sp"
+                android:textColor="#4169E1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="コントローラA/D値 2" />
+            <TextView
+                android:id="@+id/textCtrl2"
+                android:textSize="22sp"
+                android:textColor="#DC143C"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="0" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="5sp">
+            <TextView
+                android:textSize="22sp"
+                android:textColor="#4169E1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="コントローラA/D値 3" />
+            <TextView
+                android:id="@+id/textCtrl3"
+                android:textSize="22sp"
+                android:textColor="#DC143C"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="0" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="10sp">
+            <TextView
+                android:textSize="22sp"
+                android:textColor="#4169E1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="コントローラA/D値 4" />
+            <TextView
+                android:id="@+id/textCtrl4"
+                android:textSize="22sp"
+                android:textColor="#DC143C"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="0" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="5sp">
+            <TextView
+                android:textSize="22sp"
+                android:textColor="#4169E1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="サーボ目標角度 1" />
+            <TextView
+                android:id="@+id/textServo1"
+                android:textSize="22sp"
+                android:textColor="#DC143C"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="0" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="5sp">
+            <TextView
+                android:textSize="22sp"
+                android:textColor="#4169E1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="サーボ目標角度 2" />
+            <TextView
+                android:id="@+id/textServo2"
+                android:textSize="22sp"
+                android:textColor="#DC143C"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="0" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="5sp">
+            <TextView
+                android:textSize="22sp"
+                android:textColor="#4169E1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="サーボ目標角度 3" />
+            <TextView
+                android:id="@+id/textServo3"
+                android:textSize="22sp"
+                android:textColor="#DC143C"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="0" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="0sp">
+            <TextView
+                android:textSize="22sp"
+                android:textColor="#4169E1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="サーボ目標角度 4" />
+            <TextView
+                android:id="@+id/textServo4"
+                android:textSize="22sp"
+                android:textColor="#DC143C"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="0" />
+        </TableRow>
+
+    </TableLayout>
+</LinearLayout>
