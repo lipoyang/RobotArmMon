@@ -18,31 +18,14 @@
         android:layout_height="wrap_content"
         android:text="ローカルアドレス" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/textLocalAddr"
+        android:textSize="22sp"
+        android:textColor="#1E90FF"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="10sp"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/textLocalAddr1"
-            android:textSize="22sp"
-            android:textColor="#1E90FF"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:text="192.168.0.1" />
-        <TextView
-            android:id="@+id/textLocalAddr2"
-            android:textSize="22sp"
-            android:textColor="#1E90FF"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:text="192.168.0.1" />
-
-    </LinearLayout>
+        android:gravity="right"
+        android:text="192.168.0.1" />
 
     <TextView
         android:textSize="22sp"
