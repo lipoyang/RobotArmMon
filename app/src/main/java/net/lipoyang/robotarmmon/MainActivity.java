@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -39,8 +38,8 @@ public class MainActivity extends Activity implements WiFiComm.WiFiCommListener{
     // 接続確認コマンド送信用タイマ
     private Timer timerCommandA = null;
 
-    // UI操作用ハンドラ
-    final Handler handler = new Handler();
+    // リモートアドレス
+    private String mRemoteAddr = "";
 
     // データ
     int[] adval = new int[4];
@@ -63,8 +62,10 @@ public class MainActivity extends Activity implements WiFiComm.WiFiCommListener{
         buttonUpdate = (Button)findViewById(R.id.buttonUpdate);
         buttonUpdate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // UDP通信の更新
-                // TODO
+                // WiFi通信の停止
+                stopWiFi();
+                // WiFi通信の開始
+                startWiFi();
             }
         });
         textStatus = (TextView)findViewById(R.id.textStatus);
@@ -81,25 +82,64 @@ public class MainActivity extends Activity implements WiFiComm.WiFiCommListener{
 
         // load remote address
         SharedPreferences pref = getSharedPreferences("RemoteAddress", MODE_PRIVATE);
-        String remoteAddr = pref.getString("RemoteAddress", "192.168.4.1");
-        editRemoteAddr.setText(remoteAddr);
+        //mRemoteAddr = "192.168.4.1";
+        mRemoteAddr = pref.getString("RemoteAddress", "192.168.4.1");
+        editRemoteAddr.setText(mRemoteAddr);
 
         // initialize WiFi
         mWiFiComm = WiFiComm.getInstance();
         mWiFiComm.init();
     }
+    
     // 画面表示時
     @Override
     protected void onResume() {
         super.onResume();
         if(DEBUGGING) Log.e(TAG, "+ ON RESUME +");
+        
+        // WiFi通信の開始
+        startWiFi();
+    }
 
+    // 画面消去時
+    @Override
+    protected void onPause() {
+        if(DEBUGGING) Log.e(TAG, "- ON PAUSE -");
+        
+        // WiFi通信の停止
+        stopWiFi();
+        
+        super.onPause();
+    }
+
+    // 画面消滅時
+    @Override
+    protected void onDestroy() {
+        if (DEBUGGING) Log.e(TAG, "-- ON DESTROY --");
+        super.onDestroy();
+    }
+
+    /************************************************************
+     * WiFi通信関連の処理
+     ************************************************************/
+    
+    // WiFi通信の開始
+    private void startWiFi(){
+        
         // WiFiのローカルIPアドレスの表示
         String address = getWiFiIPAddress();
         textLocalAddr.setText(address);
 
         // WiFi通信の開始
-        String remoteAddr = editRemoteAddr.toString();
+        String remoteAddr = editRemoteAddr.getText().toString();
+        if(!remoteAddr.equals(mRemoteAddr)){
+            mRemoteAddr = remoteAddr;
+            SharedPreferences pref = getSharedPreferences("RemoteAddress", MODE_PRIVATE);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString("RemoteAddress", mRemoteAddr);
+            editor.apply();
+        }
+        if(DEBUGGING) Log.e(TAG, "mRemoteAddr = "+ mRemoteAddr);
         mWiFiComm.setListener(this);
         mWiFiComm.start(remoteAddr);
 
@@ -111,7 +151,7 @@ public class MainActivity extends Activity implements WiFiComm.WiFiCommListener{
             textStatus.setText("未接続");
             textStatus.setTextColor(Color.parseColor("#808080"));
         }
-
+        
         // 接続確認コマンドの送信開始
         timerCommandA = new Timer();
         timerCommandA.scheduleAtFixedRate(new TimerTask() {
@@ -128,37 +168,20 @@ public class MainActivity extends Activity implements WiFiComm.WiFiCommListener{
             }
         }, 0, 1000);
     }
-
-    // 画面消去時
-    @Override
-    protected void onPause()
-    {
-        if(DEBUGGING) Log.e(TAG, "- ON PAUSE -");
-
+    
+    // WiFi通信の停止
+    private void stopWiFi(){
+        
         // 接続確認コマンドの送信停止
         if(timerCommandA != null){
             timerCommandA.cancel();
             timerCommandA = null;
         }
-
         // WiFi通信の停止
         mWiFiComm.stop();
         mWiFiComm.clearListener();
-
-        super.onPause();
     }
-
-    // 画面消滅時
-    @Override
-    protected void onDestroy() {
-        if (DEBUGGING) Log.e(TAG, "-- ON DESTROY --");
-        super.onDestroy();
-    }
-
-    /************************************************************
-     * WiFi通信関連の処理
-     ************************************************************/
-
+    
     // WiFiのIPアドレスの取得
     private String getWiFiIPAddress(){
         String wifi_address = "---.---.---.---";

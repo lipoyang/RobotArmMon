@@ -70,6 +70,7 @@ public class WiFiComm {
         try {
             mRemoteAddr = InetAddress.getByName(remoteAddr);
         } catch (Exception e) {
+            if(DEBUGGING) Log.e(TAG, "start failed! : "+ remoteAddr);
             return false;
         }
         // start WiFi receiving thread
@@ -113,7 +114,7 @@ public class WiFiComm {
             public void run() {
                 try
                 {
-                    // if(DEBUGGING) Log.e(TAG, "send! "+new String(data) + " to " + mRemoteAddr.toString());
+                    //if(DEBUGGING) Log.e(TAG, "send! "+new String(data) + " to " + mRemoteAddr.toString());
                     DatagramSocket sendSocket = new DatagramSocket();
                     DatagramPacket sendPacket =
                             new DatagramPacket(data, data.length, mRemoteAddr, REMOTE_PORT);
