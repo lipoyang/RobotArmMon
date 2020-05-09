@@ -242,8 +242,8 @@ public class MainActivity extends Activity implements WiFiComm.WiFiCommListener{
                 {
                     for(int i = 0; i < 4; i++)
                     {
-                        adval[i] = ((int)data[2 + 2 * i] << 8)  | (int)data[3 + 2 * i];
-                        servo[i] = (int)data[10 + i];
+                        adval[i] = (((int)data[2 + 2 * i] & 0xFF) << 8)  | ((int)data[3 + 2 * i] & 0xFF);
+                        servo[i] = (int)data[10 + i] & 0xFF;
                         textCtrls[i].setText(String.format("%d", adval[i]));
                         textServos[i].setText(String.format("%d", servo[i]));
                     }
